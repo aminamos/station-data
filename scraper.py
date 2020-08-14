@@ -10,16 +10,15 @@ end_date = "2018-07-03"
 start = parser.parse(start_date)
 end = parser.parse(end_date)
 dates = list(rrule.rrule(rrule.DAILY, dtstart=start, until=end))
-date_list = ["2018-07-03"]
+date_list = []
 
-# for date in dates:
-#     date_list.append(date.strftime("%Y-%m-%d"))
+for date in dates:
+    date_list.append(date.strftime("%Y-%m-%d"))
 
 for date in date_list:
-    # url = f"https://www.wunderground.com/dashboard/pws/KWASEATT611/table/{date}/{date}/daily"
-    # response = requests.get(url)
-    # html = response.text
-    html = open("pwsd.htm").read()
+    url = f"https://www.wunderground.com/dashboard/pws/KWASEATT611/table/{date}/{date}/daily"
+    response = requests.get(url)
+    html = response.text
     soup = BeautifulSoup(html, "html.parser")
     table = soup.find_all("table")
     table = table[3]
