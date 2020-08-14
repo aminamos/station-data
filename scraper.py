@@ -34,3 +34,8 @@ for date in date_list:
     with open(f'{date}.csv', 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(output_rows)
+    
+    # save HTML file associated with CSV data
+    f = open(f"{date}.html", "w")
+    f.write(html)
+    f.close()
