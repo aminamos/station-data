@@ -5,8 +5,8 @@ from datetime import datetime, time, date
 import time
 import requests
 
-start_date = "2018-07-01"
-end_date = "2018-07-03"
+start_date = "2020-07-27"
+end_date = "2020-07-27"
 start = parser.parse(start_date)
 end = parser.parse(end_date)
 dates = list(rrule.rrule(rrule.DAILY, dtstart=start, until=end))
@@ -40,7 +40,11 @@ for date in date_list:
             continue
         else:
             for column in columns:
-                output_row.append(column.text)
+                # identifies blank cells
+                if column.text == "":
+                    output_row.append("IB")
+                else:
+                    output_row.append(column.text)
             output_row.append(date)
             output_rows.append(output_row)
 
