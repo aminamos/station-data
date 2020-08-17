@@ -6,10 +6,10 @@ import time
 import requests
 
 # date to begin looking for data
-start_date = "2017-04-02"
+start_date = "2017-08-01"
 
 # date to stop looking for data
-end_date = "2017-04-30"
+end_date = "2017-09-30"
 
 # create a range of dates from
 # start to end date
@@ -41,57 +41,60 @@ with open('station-list-draft.csv', mode='r') as csv_file:
 
             # "Go to" the web page
             response = requests.get(url)
-            html = response.text
-            soup = BeautifulSoup(html, "html.parser")
+            if (response.status_code == 200):
+                html = response.text
+                soup = BeautifulSoup(html, "html.parser")
 
-            # Find the tables on the page
-            table = soup.find_all("table")
+                # Find the tables on the page
+                table = soup.find_all("table")
 
-            # Target data is in the 4th table.
-            # If they ever add or delete tables,
-            # this script needs to be udpated.
-            table = table[3]
+                # Target data is in the 4th table.
+                # If they ever add or delete tables,
+                # this script needs to be udpated.
+                table = table[3]
 
-            output_rows = []
+                output_rows = []
 
-            header_row = table.findAll('tr')[0].findAll('th')
-            header_output_row = []
+                header_row = table.findAll('tr')[0].findAll('th')
+                header_output_row = []
 
-            for header in header_row:
-                header_output_row.append(header.text)
+                for header in header_row:
+                    header_output_row.append(header.text)
 
-            header_output_row.append("Date")
-            header_output_row.append("Site Name")
-            header_output_row.append("Site Code")
-            header_output_row.append("Lat")
-            header_output_row.append("Long")
-            output_rows.append(header_output_row)
+                header_output_row.append("Date")
+                header_output_row.append("Site Name")
+                header_output_row.append("Site Code")
+                header_output_row.append("Lat")
+                header_output_row.append("Long")
+                output_rows.append(header_output_row)
 
-            for table_row in table.findAll('tr'):
-                columns = table_row.findAll('td')
-                output_row = []
-                if columns == []:
-                    continue
-                else:
-                    for column in columns:
-                        # identifies blank cells
-                        if column.text == "":
-                            output_row.append("NA")
-                        else:
-                            output_row.append(column.text)
-                    output_row.append(date)
-                    output_row.append(site_name)
-                    output_row.append(site_code)
-                    output_row.append(loc_lat)
-                    output_row.append(loc_long)
-                    output_rows.append(output_row)
+                for table_row in table.findAll('tr'):
+                    columns = table_row.findAll('td')
+                    output_row = []
+                    if columns == []:
+                        continue
+                    else:
+                        for column in columns:
+                            # identifies blank cells
+                            if column.text == "":
+                                output_row.append("NA")
+                            else:
+                                output_row.append(column.text)
+                        output_row.append(date)
+                        output_row.append(site_name)
+                        output_row.append(site_code)
+                        output_row.append(loc_lat)
+                        output_row.append(loc_long)
+                        output_rows.append(output_row)
 
-            with open(f'{date}_{site_code}.csv', 'w') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerows(output_rows)
+                with open(f'{date}_{site_code}.csv', 'w') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerows(output_rows)
 
-            # save HTML file associated with CSV data
-            f = open(f"{date}_{site_code}.html", "w")
-            f.write(html)
-            f.close()
-            print(f"Finished {date} for site {site_name} - {site_code}")
+                # save HTML file associated with CSV data
+                f = open(f"{date}_{site_code}.html", "w")
+                f.write(html)
+                f.close()
+                print(f"Finished {date} for site {site_name} - {site_code}")
+            else:
+                break
