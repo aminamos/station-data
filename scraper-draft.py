@@ -6,10 +6,10 @@ import time
 import requests
 
 # date to begin looking for data
-start_date = "2017-03-01"
+start_date = "2017-04-01"
 
 # date to stop looking for data
-end_date = "2017-03-31"
+end_date = "2017-04-01"
 
 # create a range of dates from
 # start to end date
@@ -76,7 +76,7 @@ with open('station-list-draft.csv', mode='r') as csv_file:
                     for column in columns:
                         # identifies blank cells
                         if column.text == "":
-                            output_row.append("IB")
+                            output_row.append("NA")
                         else:
                             output_row.append(column.text)
                     output_row.append(date)
