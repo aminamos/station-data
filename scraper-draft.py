@@ -6,10 +6,10 @@ import time
 import requests
 
 # date to begin looking for data
-start_date = "2017-04-01"
+start_date = "2017-04-02"
 
 # date to stop looking for data
-end_date = "2017-04-01"
+end_date = "2017-04-30"
 
 # create a range of dates from
 # start to end date
@@ -94,3 +94,4 @@ with open('station-list-draft.csv', mode='r') as csv_file:
             f = open(f"{date}_{site_code}.html", "w")
             f.write(html)
             f.close()
+            print(f"Finished {date} for site {site_name} - {site_code}")
