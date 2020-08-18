@@ -4,15 +4,16 @@ from dateutil import parser, rrule
 from datetime import datetime, time, date
 import time
 import requests
+import os
 
 # date to begin looking for data
-start_date = "2019-06-11"
+start_date = "2020-03-31"
 start_date_2 = "2018-03-01"
 start_date_3 = "2019-03-01"
 start_date_4 = "2020-03-01"
 
 # date to stop looking for data
-end_date = "2019-09-30"
+end_date = "2020-09-30"
 end_date_2 = "2018-09-30"
 end_date_3 = "2019-09-30"
 end_date_4 = "2020-08-16"
@@ -83,8 +84,11 @@ with open('station-list-draft.csv', mode='r') as csv_file:
                 try:
                     table = table[3]
                 except IndexError:
-                    print("table bad")
-                    time.sleep(10)
+                    os.system('say "table bad" ')
+                    time.sleep(20)
+                    response = requests.get(url)
+                    html = response.text
+                    soup = BeautifulSoup(html, "html.parser")
                     table = table[3]
                 # if table == []:
                 #     print("table bad")
@@ -142,4 +146,7 @@ with open('station-list-draft.csv', mode='r') as csv_file:
                 f.close()
                 print(f"Finished {date} for site {site_name} - {site_code}")
             else:
+                print(response.status_code)
+                os.system('say "four oh four" ')
                 break
+    os.system('say "finished" ')
