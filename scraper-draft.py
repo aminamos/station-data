@@ -6,21 +6,49 @@ import time
 import requests
 
 # date to begin looking for data
-start_date = "2017-08-01"
+start_date = "2019-06-11"
+start_date_2 = "2018-03-01"
+start_date_3 = "2019-03-01"
+start_date_4 = "2020-03-01"
 
 # date to stop looking for data
-end_date = "2017-09-30"
+end_date = "2019-09-30"
+end_date_2 = "2018-09-30"
+end_date_3 = "2019-09-30"
+end_date_4 = "2020-08-16"
+
 
 # create a range of dates from
 # start to end date
 start = parser.parse(start_date)
+start2 = parser.parse(start_date_2)
+start3 = parser.parse(start_date_3)
+start4 = parser.parse(start_date_4)
 end = parser.parse(end_date)
+end2 = parser.parse(end_date_2)
+end3 = parser.parse(end_date_3)
+end4 = parser.parse(end_date_4)
 dates = list(rrule.rrule(rrule.DAILY, dtstart=start, until=end))
+dates2 = list(rrule.rrule(rrule.DAILY, dtstart=start2, until=end2))
+dates3 = list(rrule.rrule(rrule.DAILY, dtstart=start3, until=end3))
+dates4 = list(rrule.rrule(rrule.DAILY, dtstart=start4, until=end4))
 date_list = []
 
 # store a list of properly formatted dates
 for date in dates:
     date_list.append(date.strftime("%Y-%m-%d"))
+
+# for date in dates2:
+#     date_list.append(date.strftime("%Y-%m-%d"))
+
+# for date in dates3:
+#     date_list.append(date.strftime("%Y-%m-%d"))
+
+# for date in dates4:
+#     date_list.append(date.strftime("%Y-%m-%d"))
+
+# for date in date_list:
+#     print(date)
 
 # Enters the context of the site list CSV
 with open('station-list-draft.csv', mode='r') as csv_file:
@@ -44,14 +72,31 @@ with open('station-list-draft.csv', mode='r') as csv_file:
             if (response.status_code == 200):
                 html = response.text
                 soup = BeautifulSoup(html, "html.parser")
-
+                # try:
+                #     table = soup.find_all("table")[3]
+                # except:
+                #     print("not working")
+                    # time.sleep(3)
+                    
                 # Find the tables on the page
                 table = soup.find_all("table")
-
+                try:
+                    table = table[3]
+                except IndexError:
+                    print("table bad")
+                    time.sleep(10)
+                    table = table[3]
+                # if table == []:
+                #     print("table bad")
+                #     time.sleep(10)
+                #     table = soup.find_all("table")
+                # else:
+                #     pass
                 # Target data is in the 4th table.
                 # If they ever add or delete tables,
                 # this script needs to be udpated.
-                table = table[3]
+                
+                # table = table[3]
 
                 output_rows = []
 
