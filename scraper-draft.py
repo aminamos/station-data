@@ -5,15 +5,16 @@ from datetime import datetime, time, date
 import time
 import requests
 import os
+import sys
 
 # date to begin looking for data
-start_date = "2020-03-31"
+start_date = "2017-03-01"
 start_date_2 = "2018-03-01"
 start_date_3 = "2019-03-01"
 start_date_4 = "2020-03-01"
 
 # date to stop looking for data
-end_date = "2020-09-30"
+end_date = "2017-09-30"
 end_date_2 = "2018-09-30"
 end_date_3 = "2019-09-30"
 end_date_4 = "2020-08-16"
@@ -39,17 +40,17 @@ date_list = []
 for date in dates:
     date_list.append(date.strftime("%Y-%m-%d"))
 
-# for date in dates2:
-#     date_list.append(date.strftime("%Y-%m-%d"))
+for date in dates2:
+    date_list.append(date.strftime("%Y-%m-%d"))
 
-# for date in dates3:
-#     date_list.append(date.strftime("%Y-%m-%d"))
+for date in dates3:
+    date_list.append(date.strftime("%Y-%m-%d"))
 
-# for date in dates4:
-#     date_list.append(date.strftime("%Y-%m-%d"))
+for date in dates4:
+    date_list.append(date.strftime("%Y-%m-%d"))
 
-# for date in date_list:
-#     print(date)
+for date in date_list:
+    print(date)
 
 # Enters the context of the site list CSV
 with open('station-list-draft.csv', mode='r') as csv_file:
@@ -71,31 +72,26 @@ with open('station-list-draft.csv', mode='r') as csv_file:
             # "Go to" the web page
             response = requests.get(url)
             if (response.status_code == 200):
+                time.sleep(11)
                 html = response.text
                 soup = BeautifulSoup(html, "html.parser")
-                # try:
-                #     table = soup.find_all("table")[3]
-                # except:
-                #     print("not working")
-                    # time.sleep(3)
                     
                 # Find the tables on the page
                 table = soup.find_all("table")
                 try:
                     table = table[3]
                 except IndexError:
+                    for remaining in range(120, 0, -1):
+                        sys.stdout.write("\r")
+                        sys.stdout.write("{:2d} seconds remaining.".format(remaining))
+                        sys.stdout.flush()
+                        time.sleep(1)
                     os.system('say "table bad" ')
-                    time.sleep(20)
                     response = requests.get(url)
                     html = response.text
                     soup = BeautifulSoup(html, "html.parser")
                     table = table[3]
-                # if table == []:
-                #     print("table bad")
-                #     time.sleep(10)
-                #     table = soup.find_all("table")
-                # else:
-                #     pass
+
                 # Target data is in the 4th table.
                 # If they ever add or delete tables,
                 # this script needs to be udpated.
